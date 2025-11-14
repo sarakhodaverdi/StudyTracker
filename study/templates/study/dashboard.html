@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Study Tracker</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input, select, button { margin: 5px; padding: 8px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Hello {{ user.username }}!</h1>
+    <a href="{% url 'logout' %}">Logout</a>
+
+    <h2>Add New Subject</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="subject_name" placeholder="e.g. Math" required>
+        <button type="submit" name="add_subject">Add</button>
+    </form>
+
+    <h2>Log Study Session</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <select name="subject" required>
+            <option value="">--Select Subject--</option>
+            {% for subj in subjects %}
+                <option value="{{ subj.id }}">{{ subj.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="date" required>
+        <input type="number" step="0.1" name="hours" placeholder="Hours (e.g. 1.5)" required>
+        <button type="submit" name="add_session">Log</button>
+    </form>
+
+    <h2>Study Trend (Last 7 Days)</h2>
+    {% if plot_url %}
+        <img src="data:image/png;base64,{{ plot_url }}" alt="Study Chart">
+    {% else %}
+        <p><i>No study logged yet. Start tracking!</i></p>
+    {% endif %}
+</body>
+</html>
