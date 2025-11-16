@@ -1,29 +1,7 @@
-# Python
-# ---
-# فایل‌های کامپایل شده پایتون
-*.pyc
+*.sqlite3
 __pycache__/
-
-# پوشه محیط‌های مجازی (venv)
-venv/
-env/
-
-# فایل‌هایی که در حین اجرای برنامه‌های خاص ایجاد می‌شوند
-*.log
-*.pot
-*.mo
-.python-version
-.vscode/
-
-# Django
-# ---
-# فایل‌های دیتابیس SQLite
-db.sqlite3
-
-# فایل‌های رسانه‌ای (Media files) که کاربران آپلود می‌کنند
-/media/ 
-
-# فایل‌های تنظیمات محرمانه (اگر در یک فایل جداگانه ذخیره شده باشند)
-# اگر SECRET_KEY در یک فایل جداگانه .env یا local_settings قرار دارد، حتماً آن را اضافه کنید
+*.pyc
+.DS_Store
+.venv/
 .env
-local_settings.py
+*.log
