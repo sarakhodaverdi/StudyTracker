@@ -1,7 +1,17 @@
-*.sqlite3
-__pycache__/
-*.pyc
-.DS_Store
+# محیط‌های مجازی
 .venv/
+venv/
+env/
+
+# فایل‌های کش پایتون
+__pycache__/
+*.py[cod]
+
+# دیتابیس و تنظیمات محیطی
+db.sqlite3
 .env
-*.log
+
+# فایل‌های سیستم‌عامل
+.DS_Store
+.cloud/
+Archive.zip

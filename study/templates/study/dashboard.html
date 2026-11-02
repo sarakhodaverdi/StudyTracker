@@ -1,44 +1,146 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard - Study Tracker</title>
-    <style>
-        body { font-family: Arial; margin: 40px; }
-        input, select, button { margin: 5px; padding: 8px; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard • StudyTracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#6D28D9', accent: '#A78BFA' }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <h1>Hello {{ user.username }}!</h1>
-    <a href="{% url 'logout' %}">Logout</a>
+<body class="bg-gradient-to-br from-purple-50 via-violet-50 to-pink-50 min-h-screen p-4 md:p-8">
 
-    <h2>Add New Subject</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="subject_name" placeholder="e.g. Math" required>
-        <button type="submit" name="add_subject">Add</button>
-    </form>
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8 bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm">
+        <div>
+            <h1 class="text-3xl font-black text-gray-800">Hello, {{ user.username }}! 👋</h1>
+            <p class="text-gray-500 text-sm italic">"Success is the sum of small efforts."</p>
+        </div>
+        <a href="{% url 'logout' %}" class="px-5 py-2.5 bg-red-50 text-red-600 font-bold rounded-2xl hover:bg-red-100 transition flex items-center text-sm">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
 
-    <h2>Log Study Session</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <select name="subject" required>
-            <option value="">--Select Subject--</option>
-            {% for subj in subjects %}
-                <option value="{{ subj.id }}">{{ subj.name }}</option>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        
+        <div class="lg:col-span-7 flex flex-col gap-6">
+            <div class="bg-white p-7 rounded-3xl shadow-xl border border-purple-100 ring-4 ring-purple-50/50">
+                <h3 class="text-lg font-bold mb-5 text-gray-800 flex items-center">
+                    <i class="fas fa-pen-fancy mr-2 text-purple-600"></i> Log Study Session
+                </h3>
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <select name="subject" class="w-full p-3.5 rounded-xl border-2 border-gray-100 focus:border-purple-400 focus:outline-none transition bg-gray-50 text-sm" required>
+                        <option value="" disabled selected>Select Subject...</option>
+                        {% for subject in subjects %}
+                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="date" name="date" value="{{ today }}" class="p-3.5 rounded-xl border-2 border-gray-100 focus:border-purple-400 focus:outline-none transition bg-gray-50 text-sm" required>
+                        <input type="number" step="0.5" name="hours" placeholder="Hours" class="p-3.5 rounded-xl border-2 border-gray-100 focus:border-purple-400 focus:outline-none transition bg-gray-50 text-sm" required>
+                    </div>
+                    <button type="submit" name="add_session" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-xl hover:shadow-lg transition transform active:scale-95">
+                        Save Session
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white p-7 rounded-3xl shadow-lg border border-purple-100">
+                <h3 class="text-lg font-bold mb-5 text-gray-800 flex items-center">
+                    <i class="fas fa-plus-circle mr-2 text-pink-500"></i> Add New Subject
+                </h3>
+                <form method="post" class="flex gap-3">
+                    {% csrf_token %}
+                    <input type="text" name="subject_name" placeholder="Subject name..." 
+                           class="flex-1 p-3.5 rounded-xl border-2 border-gray-100 focus:border-pink-400 focus:outline-none transition bg-gray-50 text-sm" required>
+                    <button type="submit" name="add_subject" class="px-6 py-3.5 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition shadow-md active:scale-95">
+                        Register
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col gap-4">
+            <div class="bg-gradient-to-br from-purple-600 to-indigo-600 p-6 rounded-3xl text-white shadow-xl flex-1 flex flex-col justify-center">
+                <p class="opacity-80 text-xs font-semibold uppercase tracking-wider">Daily Average</p>
+                <h2 class="text-3xl font-black mt-1">{{ stats.avg }} <span class="text-base font-normal opacity-70">hrs</span></h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-3xl border border-purple-100 shadow-md flex-1 flex flex-col justify-center border-l-8 border-l-purple-500">
+                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Max Study Day</p>
+                <h2 class="text-3xl font-black text-purple-600 mt-1">{{ stats.max }} <span class="text-base font-normal text-gray-300">hrs</span></h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-purple-100 shadow-md flex-1 flex flex-col justify-center border-l-8 border-l-pink-500">
+                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Weekly Total</p>
+                <h2 class="text-3xl font-black text-pink-500 mt-1">{{ stats.total }} <span class="text-base font-normal text-gray-300">hrs</span></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white p-6 rounded-3xl shadow-xl border border-purple-100">
+            <h3 class="text-md font-bold text-gray-700 mb-4 flex items-center">
+                <i class="fas fa-chart-bar mr-2 text-pink-400"></i> Daily Comparison (Stacked)
+            </h3>
+            {% if plot_url %}
+                <img src="{{ plot_url }}" alt="Stacked Chart" class="w-full h-auto rounded-2xl shadow-inner">
+            {% else %}
+                <div class="py-20 text-center text-gray-300 italic">No daily data to display</div>
+            {% endif %}
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-xl border border-purple-100">
+            <h3 class="text-md font-bold text-gray-700 mb-4 flex items-center">
+                <i class="fas fa-chart-line mr-2 text-purple-400"></i> Weekly Trends (Lines)
+            </h3>
+            {% if trend_url %}
+                <img src="{{ trend_url }}" alt="Trend Chart" class="w-full h-auto rounded-2xl shadow-inner">
+            {% else %}
+                <div class="py-20 text-center text-gray-300 italic">No trend data to display</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="bg-white p-7 rounded-3xl shadow-xl border border-purple-100">
+        <h3 class="text-xl font-black text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-lightbulb mr-2 text-yellow-400"></i> Subject Insights
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for s in subject_stats %}
+                <div class="p-5 bg-purple-50/50 rounded-2xl border border-purple-100 transition hover:scale-105 duration-300">
+                    <p class="text-purple-600 font-bold text-sm truncate mb-1">{{ s.name }}</p>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black text-gray-800">{{ s.avg }}h</span>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase">Avg / Day</span>
+                    </div>
+                </div>
             {% endfor %}
-        </select>
-        <input type="date" name="date" required>
-        <input type="number" step="0.1" name="hours" placeholder="Hours (e.g. 1.5)" required>
-        <button type="submit" name="add_session">Log</button>
-    </form>
+        </div>
+    </div>
+</div>
 
-    <h2>Study Trend (Last 7 Days)</h2>
-    {% if plot_url %}
-        <img src="data:image/png;base64,{{ plot_url }}" alt="Study Chart">
-    {% else %}
-        <p><i>No study logged yet. Start tracking!</i></p>
-    {% endif %}
+{% if messages %}
+    <div class="fixed bottom-6 right-6 space-y-3 z-50">
+        {% for message in messages %}
+            <div class="p-4 rounded-2xl {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-600{% endif %} text-white shadow-2xl font-bold text-sm flex items-center shadow-lg">
+                <i class="fas fa-bell mr-2"></i> {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 </body>
 </html>

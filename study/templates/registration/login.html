@@ -1,36 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Study Tracker</title>
-    <style>
-        * { font-family: Arial, sans-serif; }
-        body { background: #f4f4f4; padding: 50px; text-align: center; }
-        .container { max-width: 400px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background: #007bff; color: white; font-weight: bold; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        a { color: #007bff; text-decoration: none; }
-        .error { color: red; font-weight: bold; margin: 10px 0; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • StudyTracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#6D28D9', accent: '#A78BFA' }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="container">
-        <h2>Login</h2>
-        <form method="post">
+<body class="bg-gradient-to-br from-purple-50 via-violet-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-md">
+    <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-10 border border-purple-100">
+        
+        <div class="text-center mb-10">
+            <div class="w-24 h-24 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg">
+                <i class="fas fa-book-open text-white text-4xl"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800">Welcome Back!</h1>
+            <p class="text-gray-600 mt-2">Log in to continue tracking your study</p>
+        </div>
+
+        <form method="post" class="space-y-6">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+
+            {% if messages or form.errors %}
+                <div class="space-y-2">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-center text-sm font-bold flex items-center justify-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if form.errors and not messages %}
+                        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-center text-sm font-bold flex items-center justify-center">
+                            <i class="fas fa-exclamation-circle mr-2"></i> Invalid username or password.
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                <div class="relative">
+                    <i class="fas fa-user absolute left-4 top-4 text-purple-600"></i>
+                    <input type="text" name="username" required autocomplete="username"
+                           class="w-full pl-12 pr-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition text-lg"
+                           placeholder="Enter your username">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-4 text-purple-600"></i>
+                    <input type="password" name="password" required autocomplete="current-password"
+                           class="w-full pl-12 pr-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition text-lg"
+                           placeholder="Enter your password">
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xl rounded-xl hover:shadow-2xl transform hover:scale-105 transition duration-300">
+                Log In
+            </button>
         </form>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p class="error">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
-        <p><a href="{% url 'register' %}">Don't have an account? Register</a></p>
+        <p class="text-center mt-8 text-gray-600">
+            Don't have an account?
+            <a href="{% url 'register' %}" class="text-purple-600 font-bold hover:underline">
+                Sign up
+            </a>
+        </p>
     </div>
+</div>
+
 </body>
 </html>
