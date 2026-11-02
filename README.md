@@ -20,7 +20,7 @@ A robust Django-built web application designed for managing study sessions, trac
 
 🚀 Getting Started Locally
 1. Clone the repository:
-git clone https://github.com/sarakhodaverdi/StudyTracker.git (https://www.google.com/search?q=https://github.com/sarakhodaverdi/StudyTracker.git)
+Clone the repository: `git clone https://github.com/sarakhodaverdi/StudyTracker.git`
 cd StudyTracker
 2. Create and activate a virtual environment:
 python -m venv .venv
