@@ -2,7 +2,7 @@
 A robust Django-built web application designed for managing study sessions, tracking academic subjects, and analyzing daily productivity and study statistics.
 
 
-🌐 Live Demo: https://sarakhodaverdi.pythonanywhere.com (https://www.google.com/search?q=https://sarakhodaverdi.pythonanywhere.com) 
+🌐 **Live Demo:** [https://sarakhodaverdi.pythonanywhere.com](https://sarakhodaverdi.pythonanywhere.com) 
 
 
 ✨ Features
